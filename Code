@@ -1,0 +1,108 @@
+class Cycle:
+
+	def __init__ (self, inputs = []):
+		self.indexes = []
+		for i in inputs:
+			self.indexes.append(i)
+
+
+	def __add__ (self, otherCycle):
+		a=0
+		out = Cycle()
+		for j in otherCycle.indexes:
+			a = a + 1
+			out.indexes.append(j)
+		out.indexes.append(-1)
+		if(max(otherCycle.indexes) > min(self.indexes) & max(self.indexes) > min(otherCycle.indexes)):
+			a = 0
+		for k in self.indexes:
+			out.indexes.append(k + a)
+		return out
+
+	def numTrans(self):
+		return indexes.size; 
+
+	def oneline(self):
+		n = 0
+		for i in self.indexes:
+			if i > 0:
+				n = n +1
+
+		out = linePerm(n)
+		start = -1
+		b=0
+		for i in range(1,len(self.indexes)): 
+			if(self.indexes[i-1] > 0):
+				if start == -1:
+					start = i - 1 -b
+				if(self.indexes[i] > 0):
+					out.place(self.indexes[i-1],self.indexes[i]-b)
+				else:
+					out.place(self.indexes[i-1], start)
+					start = -1
+			else:
+				b = b+1
+		out.place(self.indexes[len(self.indexes)-1],start)
+		return out
+    
+	def __str__(self):
+		out = "("
+		a = 0
+		for i in self.indexes:
+			if i == -1:
+				out = out + ") ("
+			else:
+				out = out + str(i)
+			
+		out = out + ")"
+		return out
+		
+			
+
+class linePerm:
+	def __init__ (self, n, perm = -1):
+		self.values = []
+		if perm == -1:
+			for i in (0..n-1):
+				self.values.append(i+1)
+		else: 
+			for i in (0..n-1):
+				self.values.append(perm%(10^(n-i))//10^(n-i-1))
+	def place(self, num, index):
+		self.values[index] = num;
+	
+	def checkValid(self):
+		for i in self.values:
+			for j in self.values:
+				if i==j:
+					k = k + 1
+				if k==2:
+					return false
+		return true
+	def __str__(self):
+		out = ""
+		for x in self.values:
+			out = out + str(x)
+		return out
+	def pfTerm(self):
+		out = ""
+		for i in (0..len(self.values)-1):
+			out += "a" + str(i+1) + str(self.values[i]) + " "
+		return out
+	def edgeSet(self):
+		out = []
+		for i in (0..len(self.values)-1):
+			out.append((i+1,self.values[i]))
+		return out
+	def graph(self):
+		G=Graph()
+		G.add_vertices([1..len(self.values)])
+		G.add_edges(self.edgeSet(), loops = false)
+		show(G)
+	
+
+myCycle = Cycle([1,2,3]) + Cycle([1,2,3])
+print(myCycle)
+myPerm = myCycle.oneline()
+print(myPerm)
+myPerm.graph()
